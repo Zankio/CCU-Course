@@ -3,7 +3,7 @@
 // @author     Zanko
 // @namespace  Zanko
 // @version    0.1.2
-// @description  一切只為了讓選課！！！
+// @description  一切只為了選課！！！
 // @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Add_Course01.cgi
 // @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class/Add_Course01.cgi
 // @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi*
