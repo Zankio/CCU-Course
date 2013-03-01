@@ -8,6 +8,8 @@
 // @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class/Add_Course01.cgi
 // @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Selected_View00.cgi*
 // @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class/Selected_View00.cgi*
+// @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class_new/Add_Course00.cgi*
+// @match    http://kiki.ccu.edu.tw/~ccmisp06/cgi-bin/class/Add_Course00.cgi*
 // ==/UserScript==
 
 if (unsafeWindow.parent == unsafeWindow) {
@@ -27,9 +29,17 @@ if (unsafeWindow.parent == unsafeWindow) {
 
 
 var nextType = 0;
+
+// 返回按鈕 1:開啟 0:關閉
 var goBack = 1;
+
+// 衝堂淡化 1:開啟 0:關閉
 var csco = 1;
+
+// 重整按鈕 1:開啟 0:關閉
 var cReflesh = 1;
+
+// 淡化透明度 0 ~ 1
 var iOpacity = 0.3;
 
 var ts ;
@@ -37,6 +47,7 @@ var bBack = 0;
 var nPage = 0;
 var tPage = 0;
 var NextForm;
+var lHistory, lHistory2;
 
 switch(unsafeWindow.location.pathname) {
 case "/~ccmisp06/cgi-bin/class/Selected_View00.cgi":
@@ -52,10 +63,21 @@ case "/~ccmisp06/cgi-bin/class_new/Add_Course01.cgi":
 	addGoChooser();
 	addReflesh();
 	sco();
+	break;
+case "/~ccmisp06/cgi-bin/class_new/Add_Course00.cgi":
+case "/~ccmisp06/cgi-bin/class/Add_Course00.cgi":
+	localStorage['lHistory2'] = localStorage['lHistory'];
+	localStorage['lHistory'] = unsafeWindow.history.length;
 }
 
 
 function init() {
+	lHistory = localStorage['lHistory'];
+	lHistory2 = localStorage['lHistory2'];
+	if (unsafeWindow.history.length < lHistory) {
+
+		localStorage['lHistory'] = lHistory = lHistory2;
+	}
 	NextForm = jQuery("[name=NextForm]", unsafeWindow.document);
 	var th = jQuery("th[align=right]", unsafeWindow.document);
 	var match = /第(\d)\/(\d)頁/.exec(th.text());
@@ -68,12 +90,13 @@ function init() {
 
 function addGoChooser() {
 	if (!goBack || bBack || !nPage || (nextType == 1 && nPage == tPage)) return ;
-	var go = jQuery('<input type="button" value="返回" onclick="javascript:history.go(-' + nPage + ')">', unsafeWindow.document);
+	var pages = ( unsafeWindow.history.length - lHistory ) || nPage ;
+	var go = jQuery('<input type="button" value="返  回" onclick="javascript:history.go(-' + pages + ')">', unsafeWindow.document);
 	NextForm.append(go);
 }
 function addReflesh(){
 	if(!cReflesh)return;
-	var re = jQuery('<input type="button" value="重整" onclick="javascript:this.parentNode.page.value=' + (nPage - 1) + ';this.parentNode.submit();">', unsafeWindow.document);
+	var re = jQuery('<input type="button" value="重  整" onclick="javascript:this.parentNode.page.value=' + (nPage - 1) + ';this.parentNode.submit();">', unsafeWindow.document);
 	NextForm.append(re);
 }
 
